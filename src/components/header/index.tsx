@@ -10,6 +10,7 @@ import { IconMoon, IconSun } from "@/components/icons";
 import { User } from "@/components/header/user";
 import { Logo } from "@/components/logo";
 import { useStyles } from "./styled";
+import { APPWRITE } from "@/utils/constants";
 
 export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
   const { list, listUrl } = useNavigation();
@@ -42,7 +43,7 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
         }}
       >
         <Flex align="center" wrap="wrap">
-          <Link to={listUrl("accounts")}>
+          <Link to={listUrl(APPWRITE.ITEM_COLLECTION)}>
             <Logo
               style={{
                 width: "200px",
@@ -57,13 +58,13 @@ export const Header: React.FC<RefineThemedLayoutV2HeaderProps> = () => {
             }}
             items={[
               {
-                key: "accounts",
+                key: APPWRITE.ITEM_COLLECTION,
                 label: "Item Master",
                 // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
                 icon: <BankOutlined />,
               },
               {
-                key: "clients",
+                key: APPWRITE.ORDER_COLLECTION,
                 label: "Purchase Order",
                 // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
                 icon: <ShopOutlined />,

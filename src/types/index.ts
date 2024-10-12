@@ -11,6 +11,8 @@ export type AccountForm = {
   address: string;
   phone: string;
   logo?: UploadResponse;
+  status: string;
+  item_no: string;
 };
 
 export type Account = {

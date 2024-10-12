@@ -44,15 +44,15 @@ const App: React.FC = () => {
             authProvider={authProvider}
             dataProvider={dataProvider}
             resources={[
-              // {
-              //   name: "6709456d0010647d26af",
-              //   list: "/item-master",
-              //   create: "/item-master/new",
-              //   edit: "/item-master/:id/edit",
-              //   meta: {
-              //     label: "Item Master",
-              //   },
-              // },
+              {
+                name: APPWRITE.ITEM_COLLECTION,
+                list: "/item-master",
+                create: "/item-master/new",
+                edit: "/item-master/:id/edit",
+                meta: {
+                  label: "Item Master",
+                },
+              },
               {
                 name: APPWRITE.ORDER_COLLECTION,
                 list: "/purchase-order",
@@ -62,12 +62,6 @@ const App: React.FC = () => {
                   label: "Purchase Order",
                 },
               },
-              // {
-              //   name: "invoices",
-              //   list: "/invoices",
-              //   show: "/invoices/:id",
-              //   create: "/invoices/new",
-              // },
             ]}
             notificationProvider={useNotificationProvider}
             options={{
@@ -93,22 +87,6 @@ const App: React.FC = () => {
                 }
               >
                 <Route index element={<NavigateToResource />} />
-                {/* <Route
-                  path="/item-master"
-                  element={
-                    <AccountsPageList>
-                      <Outlet />
-                    </AccountsPageList>
-                  }
-                >
-                  <Route index element={null} />
-                  <Route path="new" element={<AccountsPageCreate />} />
-                </Route>
-                <Route
-                  path="/item-master/:id/edit"
-                  element={<AccountsPageEdit />}
-                /> */}
-
                 <Route
                   path="/purchase-order"
                   element={
@@ -123,6 +101,21 @@ const App: React.FC = () => {
                 <Route
                   path="/purchase-order/:id/edit"
                   element={<ClientsPageEdit />}
+                />
+                <Route
+                  path="/item-master"
+                  element={
+                    <AccountsPageList>
+                      <Outlet />
+                    </AccountsPageList>
+                  }
+                >
+                  <Route index element={null} />
+                  <Route path="new" element={<AccountsPageCreate />} />
+                </Route>
+                <Route
+                  path="/item-master/:id/edit"
+                  element={<AccountsPageEdit />}
                 />
 
                 <Route path="/invoices">

@@ -91,21 +91,6 @@ export const ClientsPageList = ({ children }: PropsWithChildren) => {
             key="supplier_name"
             sorter
             defaultSortOrder={getDefaultSortOrder("supplier_name", sorters)}
-            defaultFilteredValue={getDefaultFilter(
-              "supplier_name",
-              filters,
-              "in"
-            )}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Select
-                  mode="multiple"
-                  placeholder="Search Name"
-                  style={{ width: 220 }}
-                  {...selectPropsName}
-                />
-              </FilterDropdown>
-            )}
           />
 
           <Table.Column

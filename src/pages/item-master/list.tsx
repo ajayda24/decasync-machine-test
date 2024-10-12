@@ -13,47 +13,27 @@ import {
 } from "@refinedev/antd";
 import { EyeOutlined, SearchOutlined } from "@ant-design/icons";
 import { Avatar, Flex, Input, Select, Table, Typography } from "antd";
-import { API_URL } from "@/utils/constants";
+import { API_URL, APPWRITE } from "@/utils/constants";
 import { getRandomColorFromString } from "@/utils/get-random-color";
 import type { Account } from "@/types";
+import { Link } from "react-router-dom";
 
 export const AccountsPageList = ({ children }: PropsWithChildren) => {
   const go = useGo();
 
-  const { tableProps, filters, sorters } = useTable<Account>({
-    sorters: {
-      initial: [{ field: "updatedAt", order: "desc" }],
-    },
-    filters: {
-      initial: [
-        {
-          field: "owner_email",
-          operator: "contains",
-          value: "",
-        },
-        {
-          field: "phone",
-          operator: "contains",
-          value: "",
-        },
-      ],
-    },
-    meta: {
-      populate: ["logo", "invoices"],
-    },
-  });
+  const { tableProps, filters, sorters } = useTable<Account>();
 
-  const { selectProps: companyNameSelectProps } = useSelect({
-    resource: "accounts",
-    optionLabel: "company_name",
-    optionValue: "company_name",
-  });
+  // const { selectProps: companyNameSelectProps } = useSelect({
+  //   resource: "accounts",
+  //   optionLabel: "company_name",
+  //   optionValue: "company_name",
+  // });
 
-  const { selectProps: selectPropsOwnerName } = useSelect({
-    resource: "accounts",
-    optionLabel: "owner_name",
-    optionValue: "owner_name",
-  });
+  // const { selectProps: selectPropsOwnerName } = useSelect({
+  //   resource: "accounts",
+  //   optionLabel: "owner_name",
+  //   optionValue: "owner_name",
+  // });
 
   return (
     <>
@@ -65,19 +45,19 @@ export const AccountsPageList = ({ children }: PropsWithChildren) => {
               size="large"
               onClick={() =>
                 go({
-                  to: { resource: "accounts", action: "create" },
+                  to: { resource: APPWRITE.ITEM_COLLECTION, action: "create" },
                   options: { keepQuery: true },
                 })
               }
             >
-              Add new Product
+              New Item
             </CreateButton>
           );
         }}
       >
         <Table
           {...tableProps}
-          rowKey={"id"}
+          rowKey={"item_no"}
           pagination={{
             ...tableProps.pagination,
             showSizeChanger: true,
@@ -85,11 +65,12 @@ export const AccountsPageList = ({ children }: PropsWithChildren) => {
           scroll={{ x: 960 }}
         >
           <Table.Column
-            title="ID"
-            dataIndex="id"
-            key="id"
+            title="Item No."
+            dataIndex="item_no"
+            key="item_no"
             width={80}
-            defaultFilteredValue={getDefaultFilter("id", filters)}
+            defaultSortOrder={getDefaultSortOrder("item_no", sorters)}
+            defaultFilteredValue={getDefaultFilter("item_no", filters, "in")}
             // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
             filterIcon={<SearchOutlined />}
             filterDropdown={(props) => {
@@ -101,126 +82,52 @@ export const AccountsPageList = ({ children }: PropsWithChildren) => {
             }}
           />
           <Table.Column
-            title="Title"
-            dataIndex="company_name"
-            key="company_name"
+            title="Name"
+            dataIndex="name"
+            key="name"
             sorter
-            defaultSortOrder={getDefaultSortOrder("company_name", sorters)}
-            defaultFilteredValue={getDefaultFilter(
-              "company_name",
-              filters,
-              "in"
-            )}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Select
-                  mode="multiple"
-                  placeholder="Search Company Name"
-                  style={{ width: 220 }}
-                  {...companyNameSelectProps}
-                />
-              </FilterDropdown>
-            )}
-            render={(name: string, record: Account) => {
-              const logoUrl = record?.logo?.url;
-              const src = logoUrl ? `${API_URL}${logoUrl}` : undefined;
-
-              return (
-                <Flex align="center" gap={8}>
-                  <Avatar
-                    alt={name}
-                    src={src}
-                    shape="square"
-                    style={{
-                      backgroundColor: src
-                        ? "none"
-                        : getRandomColorFromString(name),
-                    }}
-                  >
-                    <Typography.Text>
-                      {name?.[0]?.toUpperCase()}
-                    </Typography.Text>
-                  </Avatar>
-                  <Typography.Text>{name}</Typography.Text>
-                </Flex>
-              );
-            }}
+            defaultSortOrder={getDefaultSortOrder("name", sorters)}
           />
           <Table.Column
-            title="Owner"
-            dataIndex="owner_name"
-            key="owner_name"
+            title="Inventry Location"
+            dataIndex="inventory_location"
+            key="inventory_location"
             sorter
             defaultSortOrder={getDefaultSortOrder("owner_name", sorters)}
-            defaultFilteredValue={getDefaultFilter("owner_name", filters, "in")}
-            filterDropdown={(props) => (
-              <FilterDropdown {...props}>
-                <Select
-                  mode="multiple"
-                  placeholder="Search Owner Name"
-                  style={{ width: 220 }}
-                  {...selectPropsOwnerName}
-                />
-              </FilterDropdown>
+            render={(value) => (
+              <Link to={value} target="_blank">
+                <Typography.Link ellipsis={true}>{value}</Typography.Link>
+              </Link>
             )}
           />
+          <Table.Column title="Brand" dataIndex="brand" key="brand" />
+          <Table.Column title="Category" dataIndex="category" key="category" />
+          <Table.Column title="Supplier" dataIndex="supplier" key="supplier" />
           <Table.Column
-            title="Email"
-            dataIndex="owner_email"
-            key="owner_email"
-            defaultFilteredValue={getDefaultFilter(
-              "owner_email",
-              filters,
-              "contains"
-            )}
-            // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
-            filterIcon={<SearchOutlined />}
-            filterDropdown={(props) => {
-              return (
-                <FilterDropdown {...props}>
-                  <Input placeholder="Search Email" />
-                </FilterDropdown>
-              );
-            }}
+            title="Stock Unit"
+            dataIndex="stock_unit"
+            key="stock_unit"
           />
           <Table.Column
-            title="Phone"
-            dataIndex="phone"
-            key="phone"
-            width={154}
-            defaultFilteredValue={getDefaultFilter(
-              "phone",
-              filters,
-              "contains"
-            )}
-            // @ts-expect-error Ant Design Icon's v5.0.1 has an issue with @types/react@^18.2.66
-            filterIcon={<SearchOutlined />}
-            filterDropdown={(props) => {
-              return (
-                <FilterDropdown {...props}>
-                  <Input placeholder="Search Phone" />
-                </FilterDropdown>
-              );
-            }}
-          />
-          <Table.Column
-            title="Income"
-            dataIndex="income"
-            key="income"
+            title="Unit Price"
+            dataIndex="unit_price"
+            key="unit_price"
             width={120}
             align="end"
-            render={(_, record: Account) => {
-              let total = 0;
-              record.invoices?.forEach((invoice) => {
-                total += invoice.total;
-              });
-              return (
-                <NumberField
-                  value={total}
-                  options={{ style: "currency", currency: "USD" }}
-                />
-              );
-            }}
+            render={(price) => (
+              <NumberField
+                value={price}
+                options={{ style: "currency", currency: "INR" }}
+              />
+            )}
+          />
+          <Table.Column
+            title="Status"
+            dataIndex="status"
+            key="status"
+            render={(value) => (
+              <Typography.Text>{String(value).toUpperCase()}</Typography.Text>
+            )}
           />
           <Table.Column
             title="Actions"
